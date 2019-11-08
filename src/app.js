@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const { NODE_ENV } = require('./config');
 const clubsRouter = require('./clubs/clubs-router');
 const bookCommentsRouter = require('./book-comments/book-comments-router')
+const clubCommentsRouter = require('./club-comments/club-comments-router')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.use(cors());
 
 app.use('/api/clubs', clubsRouter);
 app.use('/api/book-comments', bookCommentsRouter)
+app.use('/api/club-comments', clubCommentsRouter)
 
 app.get('/', (req, res) => {
     res.send('Hello, world!')

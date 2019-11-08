@@ -1,25 +1,24 @@
 const path = require('path')
 const express = require('express')
 const xss = require('xss')
-const BookCommentsService = require('./book-comments-service')
+const ClubCommentsService = require('./club-comments-service')
 
-const bookCommentsRouter = express.Router()
+const clubCommentsRouter = express.Router()
 const jsonParser = express.json()
 
 const serializeComment = comment => ({
-    bookcomment_id: comment.comment_id,
+    clubcomment_id: comment.comment_id,
     comment: xss(comment.comment),
     name: xss(comment.name),
-    book_id: comment.book_id,
     club_id: comment.club_id
 })
 
-bookCommentsRouter
+clubCommentsRouter
     .route('/')
 
     .get((req, res, next) => {
         const knexInstance = req.app.get('db')
-        BookCommentsService.getAllComments(knexInstance)
+        ClubCommentsService.getAllComments(knexInstance)
             .then(comments => {
                 res.json(comments.map(serializeComment))
             })
@@ -27,10 +26,10 @@ bookCommentsRouter
     })
 
     .post(jsonParser, (req, res, next) => {
-        const { comment, name, book_id, club_id } = req.body
-        const newBookComment = { comment, name, book_id, club_id }
+        const { comment, name, club_id } = req.body
+        const newClubComment = { comment, name, club_id }
 
-        for (const [key, value] of Object.entries(newBookComment)) {
+        for (const [key, value] of Object.entries(newClubComment)) {
             if (value == null) {
                 return res.status(400).json({
                     error: { message: `Missing ${key} in request.` }
@@ -39,9 +38,9 @@ bookCommentsRouter
         }
 
         const knexInstance = req.app.get('db')
-        BookCommentsService.insertComments(
+        ClubCommentsService.insertComments(
             knexInstance,
-            newBookComment
+            newClubComment
         )
             .then(comment => {
                 res
@@ -52,13 +51,13 @@ bookCommentsRouter
             .catch(next)
     })
 
-bookCommentsRouter
+clubCommentsRouter
     .route('/:comment_id')
 
     .all((req, res, next) => {
         const knexInstance = req.app.get('db')
         const routeParameter = req.params.comment_id
-        BookCommentsService.getById(knexInstance, routeParameter)
+        ClubCommentsService.getById(knexInstance, routeParameter)
             .then(comment => {
                 if (!comment) {
                     return res.status(404).json({
@@ -76,7 +75,7 @@ bookCommentsRouter
     })
 
     .delete((req, res, next) => {
-        BookCommentsService.deleteComments(
+        ClubCommentsService.deleteComments(
             req.app.get('db'),
             req.params.comment_id
         )
@@ -86,4 +85,4 @@ bookCommentsRouter
             .catch(next)
     })
 
-module.exports = bookCommentsRouter
+module.exports = clubCommentsRouter

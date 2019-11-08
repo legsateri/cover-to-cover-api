@@ -13,7 +13,7 @@ const serializeClub = club => ({
     topic: xss(club.topic),
     currently_reading: club.currently_reading,
     next_meeting: club.next_meeting
-})
+});
 
 clubsRouter
     .route('/')
@@ -51,7 +51,7 @@ clubsRouter
                     .json(serializeClub(club))
             })
             .catch(next)
-    })
+    });
 
 clubsRouter
     .route('/:club_id')

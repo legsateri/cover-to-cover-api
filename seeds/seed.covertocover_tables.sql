@@ -4,13 +4,13 @@ TRUNCATE
     book_clubs,
     book_comments,
     club_comments
-    RESTARTIDENTITY CASCADE;
+    RESTART IDENTITY CASCADE;
 
 INSERT INTO book_clubs (
     name, 
     description, 
     topic, 
-    currenty_reading, 
+    currently_reading, 
     next_meeting
     ) VALUES 
     (
@@ -54,3 +54,5 @@ INSERT INTO club_comments (
         'Mag Millz',
         1
     );
+
+COMMIT;

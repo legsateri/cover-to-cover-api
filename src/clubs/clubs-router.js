@@ -28,8 +28,8 @@ clubsRouter
     })
 
     .post(jsonParser, (req, res, next) => {
-        const { name, description, topic, currently_reading, next_meeting } = req.body
-        const newClub = { name, description, topic, currently_reading, next_meeting }
+        const { name, description, topic } = req.body
+        const newClub = { name, description, topic }
 
         for (const [key, value] of Object.entries(newClub)) {
             if (value == null) {
@@ -95,7 +95,7 @@ clubsRouter
         if (numberOfValues === 0)
             return res.status(400).json({
                 error: {
-                    message: `Request body must have an id, name, description, topic, current book, and next meeting.`
+                    message: `Request body must have an id, name, description, and topic.`
                 }
             });
 

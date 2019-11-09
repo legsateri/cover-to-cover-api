@@ -1,10 +1,14 @@
+////////////////////////////////////////////////////////////////////////////////
 const path = require('path')
 const express = require('express')
 const xss = require('xss')
+////////////////////////////////////////////////////////////////////////////////
 const ClubsService = require('./clubs-service')
-
+const { requireAuth } = require('../middleware/jwt-auth')
+////////////////////////////////////////////////////////////////////////////////
 const clubsRouter = express.Router()
 const jsonParser = express.json()
+////////////////////////////////////////////////////////////////////////////////
 
 const serializeClub = club => ({
     club_id: club.club_id,
@@ -32,7 +36,7 @@ clubsRouter
             .catch(next)
     })
 
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const { name, description, topic } = req.body
         const newClub = { name, description, topic }
 

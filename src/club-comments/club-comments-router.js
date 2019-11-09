@@ -1,10 +1,14 @@
+////////////////////////////////////////////////////////////////////////////////
 const path = require('path')
 const express = require('express')
 const xss = require('xss')
+////////////////////////////////////////////////////////////////////////////////
 const ClubCommentsService = require('./club-comments-service')
-
+const { requireAuth } = require('../middleware/jwt-auth')
+////////////////////////////////////////////////////////////////////////////////
 const clubCommentsRouter = express.Router()
 const jsonParser = express.json()
+////////////////////////////////////////////////////////////////////////////////
 
 const serializeComment = comment => ({
     comment_id: comment.comment_id,
@@ -25,7 +29,7 @@ clubCommentsRouter
             .catch(next)
     })
 
-    .post(jsonParser, (req, res, next) => {
+    .post(requireAuth, jsonParser, (req, res, next) => {
         const { comment, user_id, club_id } = req.body
         const newClubComment = { comment, user_id, club_id }
 
@@ -54,7 +58,7 @@ clubCommentsRouter
 clubCommentsRouter
     .route('/:comment_id')
 
-    .all((req, res, next) => {
+    .all(requireAuth, (req, res, next) => {
         const knexInstance = req.app.get('db')
         const routeParameter = req.params.comment_id
         ClubCommentsService.getById(knexInstance, routeParameter)

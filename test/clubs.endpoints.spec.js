@@ -18,7 +18,7 @@ describe.only('Clubs Endpoints', () => {
 
     before('Clean the Tables', () => db.raw('TRUNCATE club_comments, book_clubs RESTART IDENTITY CASCADE'))
 
-    afterEach('Cleanup', () => db.raw('TRUNCATE club_comments, book_clubs RESTART IDENTITY CASCADE'))
+    afterEach('Cleanup', () => db.raw('TRUNCATE  club_comments, book_clubs RESTART IDENTITY CASCADE'))
 
     describe('GET /api/clubs', () => {
         context('Given No Clubs', () => {

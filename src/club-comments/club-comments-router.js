@@ -7,9 +7,9 @@ const clubCommentsRouter = express.Router()
 const jsonParser = express.json()
 
 const serializeComment = comment => ({
-    clubcomment_id: comment.comment_id,
+    comment_id: comment.comment_id,
     comment: xss(comment.comment),
-    name: xss(comment.name),
+    user_id: comment.user_id,
     club_id: comment.club_id
 })
 
@@ -26,8 +26,8 @@ clubCommentsRouter
     })
 
     .post(jsonParser, (req, res, next) => {
-        const { comment, name, club_id } = req.body
-        const newClubComment = { comment, name, club_id }
+        const { comment, user_id, club_id } = req.body
+        const newClubComment = { comment, user_id, club_id }
 
         for (const [key, value] of Object.entries(newClubComment)) {
             if (value == null) {

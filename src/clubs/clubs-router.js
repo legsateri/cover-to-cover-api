@@ -12,7 +12,12 @@ const serializeClub = club => ({
     description: xss(club.description),
     topic: xss(club.topic),
     currently_reading: club.currently_reading,
-    next_meeting: club.next_meeting
+    next_meeting: club.next_meeting,
+    member_one: club.member_one,
+    member_two: club.member_two,
+    member_three: club.member_three,
+    member_four: club.member_four,
+    member_five: club.member_five
 });
 
 clubsRouter
@@ -88,8 +93,8 @@ clubsRouter
     })
 
     .patch(jsonParser, (req, res, next) => {
-        const { club_id, name, description, topic, currently_reading, next_meeting } = req.body
-        const clubToUpdate = { club_id, name, description, topic, currently_reading, next_meeting }
+        const { club_id, name, description, topic, currently_reading, next_meeting, member_one, member_two, member_three, member_four, member_five } = req.body
+        const clubToUpdate = { club_id, name, description, topic, currently_reading, next_meeting, member_one, member_two, member_three, member_four, member_five }
 
         const numberOfValues = Object.values(clubToUpdate).filter(Boolean).length
         if (numberOfValues === 0)

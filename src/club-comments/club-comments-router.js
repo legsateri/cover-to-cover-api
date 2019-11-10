@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 const path = require('path')
 const express = require('express')
-const xss = require('xss')
 ////////////////////////////////////////////////////////////////////////////////
 const ClubCommentsService = require('./club-comments-service')
 const { requireAuth } = require('../middleware/jwt-auth')
@@ -10,47 +9,30 @@ const clubCommentsRouter = express.Router()
 const jsonParser = express.json()
 ////////////////////////////////////////////////////////////////////////////////
 
-const serializeComment = comment => ({
-    comment_id: comment.comment_id,
-    comment: xss(comment.comment),
-    user_id: comment.user_id,
-    club_id: comment.club_id
-})
-
 clubCommentsRouter
     .route('/')
 
-    .get((req, res, next) => {
-        const knexInstance = req.app.get('db')
-        ClubCommentsService.getAllComments(knexInstance)
-            .then(comments => {
-                res.json(comments.map(serializeComment))
-            })
-            .catch(next)
-    })
-
     .post(requireAuth, jsonParser, (req, res, next) => {
-        const { comment, user_id, club_id } = req.body
-        const newClubComment = { comment, user_id, club_id }
+        const { comment, club_id } = req.body
+        const newClubComment = { comment, club_id }
 
-        for (const [key, value] of Object.entries(newClubComment)) {
-            if (value == null) {
+        for (const [key, value] of Object.entries(newComment))
+            if (value == null)
                 return res.status(400).json({
                     error: { message: `Missing ${key} in request.` }
                 })
-            }
-        }
 
-        const knexInstance = req.app.get('db')
+        newComment.user_id = req.user.id
+
         ClubCommentsService.insertComments(
-            knexInstance,
-            newClubComment
+            req.app.get('db'),
+            newComment
         )
             .then(comment => {
                 res
                     .status(201)
                     .location(path.posix.join(req.originalUrl, `/${comment.comment_id}`))
-                    .json(serializeComment(comment))
+                    .json(ClubCommentsService.serializeComment(comment))
             })
             .catch(next)
     })
@@ -58,10 +40,13 @@ clubCommentsRouter
 clubCommentsRouter
     .route('/:comment_id')
 
-    .all(requireAuth, (req, res, next) => {
-        const knexInstance = req.app.get('db')
-        const routeParameter = req.params.comment_id
-        ClubCommentsService.getById(knexInstance, routeParameter)
+    .all(requireAuth)
+
+    .all((req, res, next) => {
+        ClubCommentsService.getById(
+            req.app.get('db'),
+            req.params.comment_id
+        )
             .then(comment => {
                 if (!comment) {
                     return res.status(404).json({
@@ -75,7 +60,7 @@ clubCommentsRouter
     })
 
     .get((req, res, next) => {
-        res.json(serializeComment(res.comment))
+        res.json(res.comment)
     })
 
     .delete((req, res, next) => {
@@ -83,8 +68,45 @@ clubCommentsRouter
             req.app.get('db'),
             req.params.comment_id
         )
-            .then(numRowsAffected => {
+            .then(() => {
                 res.status(204).end()
+            })
+            .catch(next)
+    })
+
+    .patch(jsonParser, (req, res, next) => {
+        const { comment } = req.body
+        updatedComment = { comment }
+
+        ClubCommentsService.updateComment(
+            req.app.get('db'),
+            req.params.comment_id,
+            updatedComment
+        )
+        .then(() => {
+            res.status(204).end()
+        })
+        .catch(next)
+    })
+
+clubCommentsRouter
+    .route('/clubs/:club_id')
+
+    .all(requireAuth)
+
+    .get((req, res, next) => {
+        ClubCommentsService.getCommentsByClub(
+            req.app.get('db'),
+            req.params.club_id,
+            req.user.user_id
+        )
+            .then(comments => {
+                if(!comments.length) {
+                    return res.status(404).json({
+                        error: {message: `No comments exist for this club.`}
+                    })
+                }
+                res.json(comments.map(ClubCommentsService.serializeCommentWithUser))
             })
             .catch(next)
     })

@@ -4,11 +4,11 @@ const express = require('express')
 const AuthService = require('./auth-service')
 ////////////////////////////////////////////////////////////////////////////////
 const authRouter = express.Router()
-const jsonBodyParser = express.json()
+const jsonParser = express.json()
 ////////////////////////////////////////////////////////////////////////////////
 
 authRouter
-    .post('/login', jsonBodyParser, (req, res, next) => {
+    .post('/login', jsonParser, (req, res, next) => {
         const { email, password } = req.body
         const loginUser = { email, password }
 
@@ -25,7 +25,7 @@ authRouter
             .then(dbUser => {
                 if (!dbUser)
                     return res.status(400).json({
-                        error: 'Incorrectemail or password.'
+                        error: 'Incorrect email or password.'
                     })
 
                 return AuthService.comparePasswords(loginUser.password, dbUser.password)

@@ -18,7 +18,7 @@ describe('Comments Endpoints', function () {
     before('Make knex instance', () => {
         db = knex({
             client: 'pg',
-            connection: process.env.TEST_DB_URL,
+            connection: process.env.TEST_DATABASE_URL,
         })
         app.set('db', db)
     })
@@ -38,7 +38,6 @@ describe('Comments Endpoints', function () {
             )
         )
 
-        // FIXME: Test failing
         it(`Creates a comment, responds 201 and new comment.`, function () {
             this.retries(3)
             const testClub = testClubs[0]

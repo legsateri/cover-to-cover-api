@@ -4,10 +4,5 @@ CREATE TABLE book_clubs (
     description TEXT NOT NULL,
     topic TEXT,
     currently_reading TEXT,
-    next_meeting DATE,
-    member_one INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    member_two INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    member_three INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    member_four INTEGER REFERENCES users(user_id) ON DELETE CASCADE,
-    member_five INTEGER REFERENCES users(user_id) ON DELETE CASCADE
+    next_meeting DATE
 );

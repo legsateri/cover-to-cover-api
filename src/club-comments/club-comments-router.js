@@ -14,7 +14,7 @@ clubCommentsRouter
 
     .post(requireAuth, jsonParser, (req, res, next) => {
         const { comment, club_id } = req.body
-        const newClubComment = { comment, club_id }
+        const newComment = { comment, club_id }
 
         for (const [key, value] of Object.entries(newComment))
             if (value == null)
@@ -38,6 +38,24 @@ clubCommentsRouter
     })
 
 clubCommentsRouter
+    .route('/user')
+
+    .all(requireAuth)
+
+    .get((req, res, next) => {
+        const user_id = req.user.user_id
+
+        ClubCommentsService.getCommentsByUser(
+            req.app.get('db'),
+            user_id
+        )
+            .then(comments => {
+                res.json(comments.map(ClubCommentsService.serializeCommentWithClubInfo))
+            })
+            .catch(next)
+    })
+
+clubCommentsRouter
     .route('/:comment_id')
 
     .all(requireAuth)
@@ -50,7 +68,7 @@ clubCommentsRouter
             .then(comment => {
                 if (!comment) {
                     return res.status(404).json({
-                        error: { message: 'Comment does not exist.' }
+                        error: { message: `Comment does not exist.` }
                     })
                 }
                 res.comment = comment

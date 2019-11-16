@@ -81,6 +81,12 @@ const ClubCommentsService = {
             .groupBy('comment.comment_id', 'club.club_id')
     },
 
+    getAllComments(knex) {
+        return knex
+            .select('*')
+            .from('club_comments')
+    },
+
     getById(knex, comment_id) {
         return knex('club_comments')
             .where('comment_id', comment_id)

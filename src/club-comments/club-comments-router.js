@@ -12,6 +12,15 @@ const jsonParser = express.json()
 clubCommentsRouter
     .route('/')
 
+    .get((req, res, next) => {
+        const knexInstance = req.app.get('db')
+        ClubCommentsService.getAllComments(knexInstance)
+            .then(comments => {
+                res.json(comments)
+            })
+            .catch(next)
+    })
+
     .post(requireAuth, jsonParser, (req, res, next) => {
         const { comment, club_id } = req.body
         const newComment = { comment, club_id }

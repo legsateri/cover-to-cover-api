@@ -22,7 +22,7 @@ clubCommentsRouter
                     error: { message: `Missing ${key} in request.` }
                 })
 
-        newComment.user_id = req.user.id
+        newComment.user_id = req.user.user_id
 
         ClubCommentsService.insertComments(
             req.app.get('db'),

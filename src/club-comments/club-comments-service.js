@@ -15,7 +15,8 @@ const ClubCommentsService = {
         return {
             comment_id: comment.comment_id,
             comment: xss(comment.comment),
-            club_id: comment.club_id
+            club_id: comment.club_id,
+            user_id: comment.user_id
         }
     },
 
@@ -25,6 +26,7 @@ const ClubCommentsService = {
             comment_id: comment.comment_id,
             comment: comment.comment,
             club_id: comment.club_id,
+            user_id: comment.user_id,
             club: {
                 club_id: club.club_id,
                 name: club.name,

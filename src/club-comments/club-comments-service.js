@@ -43,42 +43,33 @@ const ClubCommentsService = {
         }
     },
 
-    getCommentsByUser(db, user_id) {
+    getCommentsByUser(db, comment_id) {
         return db
             .from('club_comments AS comment')
             .select(
                 'comment.comment_id',
-                'comment.user_id',
                 'comment.club_id',
                 'comment.comment',
                 db.raw(
-                    `json_strip_nulls(
-                        row_to_json(
+                    `row_to_json(
                             (SELECT tmp FROM (
                                 SELECT
-                                    club.club_id,
-                                    club.name,
-                                    club.description,
-                                    club.topic,
-                                    club.currently_reading,
-                                    club.next_meeting,
-                                    club.member_one,
-                                    club.member_two,
-                                    club.member_three,
-                                    club.member_four,
-                                    club.member_five
+                                    user.user_id,
+                                    user.full_name,
+                                    user.email,
+                                    user.date_modified
                             ) tmp)
                         )
-                    ) AS "club"`
+                    ) AS "user"`
                 )
             )
-            .where('comment.user_id', user_id)
             .leftJoin(
-                'book_clubs AS club',
-                'comment.club_id',
-                'club.club_id'
+                'users AS user',
+                'comment.user_id',
+                'user.user_id'
             )
-            .groupBy('comment.comment_id', 'club.club_id')
+            .where('comment.comment_id', comment_id)
+            .first()
     },
 
     getAllComments(knex) {

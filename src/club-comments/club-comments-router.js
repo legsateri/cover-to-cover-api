@@ -59,7 +59,7 @@ clubCommentsRouter
             user_id
         )
             .then(comments => {
-                res.json(comments.map(ClubCommentsService.serializeCommentWithClubInfo))
+                res.json(comments.map(ClubCommentsService.serializeCommentWithUser))
             })
             .catch(next)
     })

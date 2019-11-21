@@ -107,7 +107,6 @@ const ClubCommentsService = {
                 'comment.user_id',
                 'user.full_name'
             )
-            .whereNot('comment.user_id', user_id)
             .where('comment.club_id', club_id)
             .leftJoin(
                 'users AS user',

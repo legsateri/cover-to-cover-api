@@ -43,13 +43,14 @@ const ClubCommentsService = {
         }
     },
 
-    getCommentsByUser(db, comment_id) {
+    getCommentsByUser(db, user_id) {
         return db
             .from('club_comments AS comment')
             .select(
                 'comment.comment_id',
                 'comment.club_id',
                 'comment.comment',
+                'comment.user_id',
                 db.raw(
                     `row_to_json(
                             (SELECT tmp FROM (
@@ -66,7 +67,8 @@ const ClubCommentsService = {
             .leftJoin(
                 'users AS user',
                 'comment.user_id',
-                'user.user_id'
+                'user.user_id',
+                'user.full_name'
             )
             .where('comment.comment_id', comment_id)
             .first()

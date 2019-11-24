@@ -1,26 +1,56 @@
-# Express Boilerplate!
+# Cover To Cover App
 
-This is a boilerplate project used for starting new projects!
+A virtual book club application. Users can create an account, find clubs to join, add books for the group to read, comment on the books and start their own club.
 
-## Set up
+## Motivation
 
-Complete the following steps to start a new project (NEW-PROJECT-NAME):
+Book clubs are a great way to meet new people and be exposed to new things and ideas. I wanted to provide a space where anyone can read books together and discuss them.
 
-1. Clone this repository to your local machine `git clone BOILERPLATE-URL NEW-PROJECTS-NAME`
-2. `cd` into the cloned repository
-3. Make a fresh start of the git history for this project with `rm -rf .git && git init`
-4. Install the node dependencies `npm install`
-5. Move the example Environment file to `.env` that will be ignored by git and read by the express server `mv example.env .env`
-6. Edit the contents of the `package.json` to use NEW-PROJECT-NAME instead of `"name": "express-boilerplate",`
+## Environment Setup
 
-## Scripts
+1. Setup your own postgress server
+2. Run migration files to build your table structure
+3. Create a .env file in your server folder which contains the path to your database
+4. Run the seed files to seed your database.
+5. Run your project with
+```
+npm run dev
+```
 
-Start the application `npm start`
+## Running Tests
 
-Start nodemon for the application `npm run dev`
+To run tests, run
+```
+npm test
+```
 
-Run the tests `npm test`
+## Built With
 
-## Deploying
+### Back-End
+* Postgress
+* Express
+* Node
+* Knex
 
-When your new project is ready for deployment, add a new Heroku application with `heroku create`. This will make a new git remote called "heroku" and you can then `npm run deploy` which will push to this remote's master branch.
+### Testing
+* Mocha
+* Chai
+
+## Features
+
+* GET all clubs
+* DELETE individual clubs
+* POST a club
+* PATCH a club
+* GET all comments
+* DELETE individual comments
+* POST a comment
+* POST new users
+
+## Demo
+
+- [Live Demo](https://cover-to-cover-app.legsateri.now.sh/)
+
+## Client
+
+- [Client Repo](https://github.com/legsateri/cover-to-cover-app)
